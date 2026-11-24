@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#123c70" />
+    <title>@ViewData["Title"] · Parqueadero USC</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <header class="topbar">
+        <a class="brand" asp-controller="Home" asp-action="Index">
+            <img class="brand-logo" src="~/img/usc-logo.png" alt="Universidad Santiago de Cali" />
+            <span class="brand-copy">PARQUEADERO <strong>USC</strong><small>CONTROL DE AFORO</small></span>
+        </a>
+        <nav class="navigation" aria-label="Navegación principal">
+            <a asp-controller="Home" asp-action="Index">Aforo en vivo</a>
+            @if (User.IsInRole("Estudiante"))
+            {
+                <a asp-controller="Parqueaderos" asp-action="Estudiantes">Parqueadero estudiantes</a>
+            }
+            @if (User.IsInRole("Docente"))
+            {
+                <a asp-controller="Parqueaderos" asp-action="Docentes">Parqueadero docentes</a>
+            }
+            @if (User.IsInRole("Egresado"))
+            {
+                <a asp-controller="Parqueaderos" asp-action="Egresados">Parqueadero egresados</a>
+            }
+            <a asp-controller="Parqueaderos" asp-action="Arena">Arena USC</a>
+            @if (User.IsInRole("Docente"))
+            {
+                <a asp-controller="Reservas" asp-action="Index">Solicitar cupo</a>
+            }
+            @if (User.IsInRole("Estudiante"))
+            {
+                <a asp-controller="Acceso" asp-action="Index">Mis entradas y salidas</a>
+            }
+            @if (User.IsInRole("Empleado") || User.IsInRole("Administrador"))
+            {
+                <a asp-controller="Acceso" asp-action="Index">Accesos</a>
+            }
+            @if (User.IsInRole("Administrador"))
+            {
+                <a asp-controller="Tarjetas" asp-action="Index">Tarjetas</a>
+                <a asp-controller="Reportes" asp-action="Index">Reportes</a>
+                <a asp-controller="Usuarios" asp-action="Index">Usuarios</a>
+                <a asp-controller="Configuracion" asp-action="Index">Configuración</a>
+                <a asp-controller="Reservas" asp-action="Index">Reservas</a>
+            }
+        </nav>
+        <div class="session-area">
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <span class="session-name">@User.Identity.Name</span>
+                <form asp-controller="Account" asp-action="Logout" method="post">
+                    <button class="button button-outline button-small" type="submit">Salir</button>
+                </form>
+            }
+            else
+            {
+                <a class="button button-outline button-small" asp-controller="Account" asp-action="Login">Iniciar sesión</a>
+            }
+        </div>
+    </header>
+    <main class="page-content container">
+        @RenderBody()
+    </main>
+    <footer class="footer">Universidad Santiago de Cali <span>·</span> Consulta pública disponible sin iniciar sesión</footer>
+    @await RenderSectionAsync("Scripts", required: false)
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

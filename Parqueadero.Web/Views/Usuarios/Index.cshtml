@@ -1,0 +1,22 @@
+@model UsuariosViewModel
+@{
+    ViewData["Title"] = "Usuarios";
+}
+<section class="page-heading"><div><p class="eyebrow">ADMINISTRACIÓN</p><h1>Usuarios y permisos</h1><p>Crea cuentas y asigna uno de los perfiles del sistema.</p></div></section>
+@if (TempData["Mensaje"] is string mensaje) { <div class="alert alert-success">@mensaje</div> }
+@if (TempData["Error"] is string error) { <div class="alert alert-error">@error</div> }
+<section class="panel-card"><div class="panel-title"><p class="eyebrow">NUEVA CUENTA</p><h2>Crear usuario</h2></div>
+    <form asp-action="Crear" method="post" class="user-form row g-3">
+        <div asp-validation-summary="All" class="validation-message col-12"></div>
+        <div class="col-12 col-md-6"><label asp-for="NombreCompleto"></label><input asp-for="NombreCompleto" class="form-input form-control" /><span asp-validation-for="NombreCompleto" class="validation-message"></span></div>
+        <div class="col-12 col-md-6"><label asp-for="Email"></label><input asp-for="Email" class="form-input form-control" /><span asp-validation-for="Email" class="validation-message"></span></div>
+        <div class="col-12 col-md-6"><label asp-for="Rol"></label><select asp-for="Rol" class="form-input form-select">@foreach (var rol in Model.Roles) { <option value="@rol">@rol</option> }</select><span asp-validation-for="Rol" class="validation-message"></span></div>
+        <div class="col-12 col-md-6"><label asp-for="Password">Contraseña temporal</label><input asp-for="Password" class="form-input form-control" /><span class="field-hint">Mínimo 8 caracteres, una mayúscula, un número y un símbolo.</span><span asp-validation-for="Password" class="validation-message"></span></div>
+        <div class="col-12"><button class="button button-primary" type="submit">Crear cuenta</button></div>
+    </form>
+</section>
+<section class="panel-card"><div class="section-heading"><div><p class="eyebrow">CUENTAS REGISTRADAS</p><h2>@Model.Usuarios.Count usuarios</h2></div></div>
+    <div class="table-wrap"><table><thead><tr><th>Nombre</th><th>Correo</th><th>Perfil</th></tr></thead><tbody>
+    @foreach (var usuario in Model.Usuarios) { <tr><td><strong>@usuario.NombreCompleto</strong></td><td>@usuario.Email</td><td>@Model.RolesPorUsuario.GetValueOrDefault(usuario.Id, "Sin rol")</td></tr> }
+    </tbody></table></div>
+</section>

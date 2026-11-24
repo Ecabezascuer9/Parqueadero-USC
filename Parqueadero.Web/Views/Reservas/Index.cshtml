@@ -1,0 +1,58 @@
+@model ReservasViewModel
+@{
+    ViewData["Title"] = User.IsInRole("Administrador") ? "Reservas" : "Solicitar cupo";
+    var usuarioId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+}
+<section class="reservation-heading">
+    <div><p class="eyebrow">PARQUEADERO UNIVERSITARIO</p><h1>@(User.IsInRole("Administrador") ? "Reservas programadas" : "Solicita tu cupo")</h1>
+        <p>@(User.IsInRole("Administrador") ? "Consulta y administra las solicitudes confirmadas." : "Elige cuándo planeas llegar y por cuántas horas. La entrada y la salida reales las registra el personal de acceso.")</p>
+    </div>
+</section>
+@if (TempData["Mensaje"] is string mensaje) { <div class="alert alert-success">@mensaje</div> }
+@if (TempData["Error"] is string error) { <div class="alert alert-error">@error</div> }
+@if (User.IsInRole("Docente"))
+{
+    <section class="reservation-form panel-card">
+        <div class="panel-title"><p class="eyebrow">NUEVA SOLICITUD</p><h2>Programa tu visita</h2></div>
+        <div asp-validation-summary="All" class="validation-message"></div>
+        <form asp-action="Solicitar" method="post" class="row g-3 align-items-end">
+            <div class="col-12 col-md-6"><label asp-for="FechaHoraDeseada"></label><input asp-for="FechaHoraDeseada" type="datetime-local" min="@ViewBag.MinFechaHora" class="form-input form-control" /><span asp-validation-for="FechaHoraDeseada" class="validation-message"></span></div>
+            <div class="col-12 col-md-3"><label asp-for="DuracionHoras"></label><select asp-for="DuracionHoras" class="form-input form-select">@for (var horas = 1; horas <= 12; horas++) { <option value="@horas">@horas @(horas == 1 ? "hora" : "horas")</option> }</select><span asp-validation-for="DuracionHoras" class="validation-message"></span></div>
+            <div class="col-12 col-md-3"><button class="button button-primary w-100" type="submit">Solicitar y asignar tarjeta</button></div>
+        </form>
+        <div class="reservation-note"><span class="info-icon" aria-hidden="true">i</span><p>Al confirmar recibirás un ticket y una tarjeta asignada. La duración solo estima la visita; no modifica ni fija tus horas reales de entrada o salida.</p></div>
+    </section>
+}
+<section class="panel-card reservation-list">
+    <div class="section-heading"><div><p class="eyebrow">@(User.IsInRole("Administrador") ? "TODAS LAS SOLICITUDES" : "TUS SOLICITUDES")</p><h2>@Model.Reservas.Count @(Model.Reservas.Count == 1 ? "reserva" : "reservas")</h2></div></div>
+    @if (Model.Reservas.Count == 0)
+    {
+        <div class="empty-reservations"><p>Aún no tienes reservas. Cuando solicites un cupo, aquí verás el ticket y la tarjeta asignada.</p></div>
+    }
+    else
+    {
+        <div class="table-wrap"><table><thead><tr>
+            @if (User.IsInRole("Administrador")) { <th>Estudiante</th> }
+            <th>Ticket</th><th>Tarjeta</th><th>Horario deseado</th><th>Duración</th><th>Estado</th><th></th>
+        </tr></thead><tbody>
+        @foreach (var reserva in Model.Reservas)
+        {
+            <tr>
+                @if (User.IsInRole("Administrador")) { <td>@Model.CorreosUsuarios.GetValueOrDefault(reserva.UsuarioId, "Cuenta eliminada")</td> }
+                <td><strong>@reserva.CodigoTicket</strong></td>
+                <td><span class="ticket-card">@reserva.Tarjeta?.Codigo</span></td>
+                <td>@reserva.FechaHoraDeseada.ToString("dd/MM/yyyy HH:mm")<small class="table-subline">Hasta aprox. @reserva.FinEstimado.ToString("HH:mm")</small></td>
+                <td>@reserva.DuracionHoras @(reserva.DuracionHoras == 1 ? "hora" : "horas")</td>
+                <td><span class="pill @(reserva.Estado == EstadoReserva.Confirmada ? "pill-active" : "pill-muted")">@reserva.Estado</span></td>
+                <td class="table-action">
+                    @if (reserva.Estado == EstadoReserva.Confirmada && DateTime.Now < reserva.FechaHoraDeseada
+                        && (User.IsInRole("Administrador") || reserva.UsuarioId == usuarioId))
+                    {
+                        <form asp-action="Cancelar" method="post"><input type="hidden" name="id" value="@reserva.Id" /><button class="button button-outline button-small" type="submit">Cancelar</button></form>
+                    }
+                </td>
+            </tr>
+        }
+        </tbody></table></div>
+    }
+</section>

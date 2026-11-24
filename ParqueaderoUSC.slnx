@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="Parqueadero.Core/Parqueadero.Core.csproj" />
+  <Project Path="Parqueadero.Data/Parqueadero.Data.csproj" />
+  <Project Path="Parqueadero.Desktop/Parqueadero.Desktop.csproj" />
+  <Project Path="Parqueadero.Web/Parqueadero.Web.csproj" />
+</Solution>

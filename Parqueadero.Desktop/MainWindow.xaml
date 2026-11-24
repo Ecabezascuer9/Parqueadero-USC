@@ -1,0 +1,49 @@
+<Window x:Class="Parqueadero.Desktop.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Parqueadero USC · Operación" Height="560" Width="900"
+        MinHeight="480" MinWidth="720" Background="#F4F7FA">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="72"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Border Grid.Row="0" Background="#123C70">
+            <DockPanel Margin="28,0">
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock Text="PARQUEADERO USC" Foreground="White" FontSize="18" FontWeight="Bold"/>
+                    <TextBlock Text="PANEL DE OPERACIÓN · APLICACIÓN DE ESCRITORIO" Foreground="#C5D5E8" FontSize="10" Margin="0,3,0,0"/>
+                </StackPanel>
+                <TextBlock x:Name="HeaderStatus" DockPanel.Dock="Right" VerticalAlignment="Center" Foreground="White" FontSize="13"/>
+            </DockPanel>
+        </Border>
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="36,28" MaxWidth="760" HorizontalAlignment="Left">
+                <TextBlock Text="Registro de acceso" FontSize="26" FontWeight="Bold" Foreground="#17385F"/>
+                <TextBlock Text="Escanea o escribe el código de la tarjeta y selecciona el movimiento." Foreground="#65758A" Margin="0,6,0,22"/>
+                <Border Background="White" BorderBrush="#E0E6EE" BorderThickness="1" Padding="24" Margin="0,0,0,20">
+                    <StackPanel>
+                        <TextBlock Text="CÓDIGO DE TARJETA" FontSize="10" FontWeight="Bold" Foreground="#748195" Margin="0,0,0,8"/>
+                        <TextBox x:Name="CardCode" Height="42" FontSize="16" Padding="10,7" BorderBrush="#CAD4E1" BorderThickness="1"/>
+                        <StackPanel Orientation="Horizontal" Margin="0,14,0,0">
+                            <Button Content="Registrar entrada" Click="RegisterEntry_Click" Height="42" MinWidth="160" Padding="16,0" Background="#123C70" Foreground="White" BorderThickness="0" FontWeight="Bold" Cursor="Hand"/>
+                            <Button Content="Registrar salida" Click="RegisterExit_Click" Height="42" MinWidth="160" Padding="16,0" Margin="10,0,0,0" Background="White" Foreground="#123C70" BorderBrush="#C7D3E1" BorderThickness="1" FontWeight="Bold" Cursor="Hand"/>
+                        </StackPanel>
+                        <TextBlock x:Name="ResultMessage" Margin="0,14,0,0" TextWrapping="Wrap" Foreground="#3B7656"/>
+                    </StackPanel>
+                </Border>
+                <Border Background="White" BorderBrush="#E0E6EE" BorderThickness="1" Padding="24">
+                    <StackPanel>
+                        <DockPanel>
+                            <TextBlock Text="OCUPACIÓN ACTUAL" FontSize="10" FontWeight="Bold" Foreground="#748195"/>
+                            <Button Content="Actualizar" DockPanel.Dock="Right" Click="Refresh_Click" Padding="12,5" Background="White" Foreground="#123C70" BorderBrush="#C7D3E1" BorderThickness="1"/>
+                        </DockPanel>
+                        <TextBlock x:Name="Availability" Text="--" FontSize="42" FontWeight="Bold" Foreground="#123C70" Margin="0,10,0,0"/>
+                        <TextBlock x:Name="OccupancyDetails" Text="Cupos libres" Foreground="#65758A"/>
+                    </StackPanel>
+                </Border>
+                <TextBlock Text="La aplicación web usa la misma base de datos SQLite compartida." Foreground="#8A96A5" FontSize="11" Margin="0,18,0,0"/>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Window>

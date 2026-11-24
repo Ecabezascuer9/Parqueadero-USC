@@ -1,0 +1,19 @@
+@model RegistroEgresadoViewModel
+@{
+    ViewData["Title"] = "Registro de egresado";
+}
+<section class="login-layout row g-4 align-items-center">
+    <div class="login-card col-12 col-lg-6">
+        <div class="eyebrow">CUENTA DE EGRESADO</div>
+        <h2>Crear cuenta</h2>
+        <form asp-action="RegistrarEgresado" method="post" class="form-stack">
+            <div asp-validation-summary="All" class="validation-message"></div>
+            <label asp-for="NombreCompleto"></label><input asp-for="NombreCompleto" class="form-input" />
+            <label asp-for="CorreoPersonal"></label><input asp-for="CorreoPersonal" class="form-input" autocomplete="email" />
+            <label asp-for="CorreoUniversidad"></label><input asp-for="CorreoUniversidad" class="form-input" placeholder="nombre@usc.edu.co" />
+            <label asp-for="Password"></label><input asp-for="Password" class="form-input" autocomplete="new-password" />
+            <label asp-for="ConfirmarPassword"></label><input asp-for="ConfirmarPassword" class="form-input" autocomplete="new-password" />
+            <button type="submit" class="button button-primary button-wide">Crear cuenta y entrar</button>
+        </form>
+    </div>
+</section>

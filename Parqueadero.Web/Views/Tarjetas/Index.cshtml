@@ -1,0 +1,15 @@
+@model TarjetasViewModel
+@{
+    ViewData["Title"] = "Tarjetas";
+}
+<section class="page-heading"><div><p class="eyebrow">ADMINISTRACIÓN</p><h1>Tarjetas de acceso</h1><p>Activa o desactiva tarjetas y revisa su estado.</p></div></section>
+@if (TempData["Mensaje"] is string mensaje) { <div class="alert alert-success">@mensaje</div> }
+@if (TempData["Error"] is string error) { <div class="alert alert-error">@error</div> }
+<section class="panel-card"><div class="panel-title"><p class="eyebrow">NUEVA TARJETA</p><h2>Registrar tarjeta</h2></div>
+    <form asp-action="Crear" method="post" class="inline-form row align-items-end g-3"><div class="col-12 col-md-7"><label asp-for="NuevoCodigo"></label><input asp-for="NuevoCodigo" class="form-input form-control" placeholder="Ej. USC-011" /><span asp-validation-for="NuevoCodigo" class="validation-message"></span></div><div class="col-12 col-md-4"><button class="button button-primary w-100" type="submit">Crear tarjeta</button></div></form>
+</section>
+<section class="panel-card"><div class="section-heading"><div><p class="eyebrow">INVENTARIO</p><h2>@Model.Tarjetas.Count tarjetas</h2></div></div>
+    <div class="table-wrap"><table><thead><tr><th>Código</th><th>Estado</th><th></th></tr></thead><tbody>
+    @foreach (var tarjeta in Model.Tarjetas) { <tr><td><strong>@tarjeta.Codigo</strong></td><td><span class="pill @(tarjeta.Estado == EstadoTarjeta.Activa ? "pill-active" : "pill-muted")">@tarjeta.Estado</span></td><td class="table-action"><form asp-action="CambiarEstado" method="post"><input type="hidden" name="id" value="@tarjeta.Id" /><button class="button button-outline button-small" type="submit">@(tarjeta.Estado == EstadoTarjeta.Activa ? "Desactivar" : "Activar")</button></form></td></tr> }
+    </tbody></table></div>
+</section>

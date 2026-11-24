@@ -1,0 +1,63 @@
+@model AforoPerfilViewModel
+@{
+    ViewData["Title"] = "Aforo en vivo";
+}
+<section class="page-heading">
+    <div><p class="eyebrow">ESTADO EN TIEMPO REAL</p><h1>@Model.Titulo</h1><p>El parqueadero con más cupo disponible aparece primero.</p></div>
+</section>
+<section class="panel-card">
+    <div class="section-heading">
+        <div><p class="eyebrow">PARQUEADEROS AUTORIZADOS</p><h2>Selecciona una ubicación</h2></div>
+    </div>
+    <div class="d-flex flex-wrap gap-2" role="group" aria-label="Parqueaderos disponibles">
+        @foreach (var parqueadero in Model.Parqueaderos)
+        {
+            <button type="button"
+                    class="button button-primary parqueadero-selector"
+                    data-nombre="@parqueadero.Nombre"
+                    data-abierto="@(parqueadero.Abierto ? "Abierto" : "Cerrado")"
+                    data-disponibles="@parqueadero.Disponibles"
+                    data-total="@parqueadero.CupoTotal"
+                    data-descripcion="@parqueadero.Descripcion">
+                @parqueadero.Nombre
+            </button>
+        }
+    </div>
+    @if (Model.Parqueaderos.Count > 0)
+    {
+        var principal = Model.Parqueaderos[0];
+        <div id="detalle-parqueadero" class="row g-3 align-items-center mt-2">
+            <div class="col-12 col-lg-7">
+                <p class="eyebrow">SUGERENCIA PRINCIPAL · MÁS CUPOS DISPONIBLES</p>
+                <h2 id="detalle-nombre">@principal.Nombre</h2>
+                <p id="detalle-estado" class="muted">@(principal.Abierto ? "Abierto" : "Cerrado") · @principal.Disponibles de @principal.CupoTotal cupos disponibles</p>
+                <p id="detalle-descripcion" class="muted">@principal.Descripcion</p>
+            </div>
+            <div class="col-12 col-lg-5 text-lg-end">
+                <strong id="detalle-disponibles" style="font-size:3rem;">@principal.Disponibles</strong><span> cupos libres</span>
+            </div>
+        </div>
+    }
+</section>
+
+@section Scripts {
+<script>
+    (() => {
+        const nombre = document.getElementById("detalle-nombre");
+        const estado = document.getElementById("detalle-estado");
+        const disponibles = document.getElementById("detalle-disponibles");
+        const descripcion = document.getElementById("detalle-descripcion");
+        const detalle = document.getElementById("detalle-parqueadero");
+
+        document.querySelectorAll(".parqueadero-selector").forEach((boton) => {
+            boton.addEventListener("click", () => {
+                nombre.textContent = boton.dataset.nombre;
+                estado.textContent = `${boton.dataset.abierto} · ${boton.dataset.disponibles} de ${boton.dataset.total} cupos disponibles`;
+                disponibles.textContent = boton.dataset.disponibles;
+                descripcion.textContent = boton.dataset.descripcion;
+                detalle.querySelector(".eyebrow").textContent = "PARQUEADERO SELECCIONADO";
+            });
+        });
+    })();
+</script>
+}

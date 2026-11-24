@@ -1,0 +1,20 @@
+@model ReportesViewModel
+@{
+    ViewData["Title"] = "Reportes";
+}
+<section class="page-heading"><div><p class="eyebrow">ADMINISTRACIÓN · ANALÍTICA</p><h1>Reportes del parqueadero</h1><p>Actividad de los últimos siete días y tiempos de permanencia.</p></div></section>
+<div class="stat-grid report-stats row g-3">
+    <article class="stat-card col-6 col-lg-3"><div class="stat-label">Permanencia promedio</div><div class="stat-value">@($"{(int)TimeSpan.FromMinutes(Model.PermanenciaPromedioMinutos).TotalHours:00}:{TimeSpan.FromMinutes(Model.PermanenciaPromedioMinutos).Minutes:00}")</div><div class="stat-note">Horas y minutos</div></article>
+    <article class="stat-card col-6 col-lg-3"><div class="stat-label">Entradas hoy</div><div class="stat-value">@Model.EntradasHoy</div><div class="stat-note">Todos los movimientos</div></article>
+    <article class="stat-card col-6 col-lg-3"><div class="stat-label">Pico de las 10:00</div><div class="stat-value">@Model.EntradasALasDiez</div><div class="stat-note">Entradas registradas</div></article>
+    <article class="stat-card col-6 col-lg-3"><div class="stat-label">Pico de las 17:00</div><div class="stat-value">@Model.EntradasALasCinco</div><div class="stat-note">Entradas registradas</div></article>
+</div>
+<div class="report-grid row g-3">
+    <section class="panel-card col-12 col-lg-6"><div class="panel-title"><p class="eyebrow">DEMANDA SEMANAL</p><h2>Ocupación máxima por día</h2></div><div class="bar-chart">
+        @foreach (var item in Model.OcupacionPorDia) { var max = Math.Max(1, Model.OcupacionPorDia.Max(entry => entry.Cantidad)); <div class="bar-column"><span class="bar-count">@item.Cantidad</span><div class="bar-track"><div class="bar" style="height:@Math.Max(4, item.Cantidad * 100 / max)%"></div></div><span class="bar-label">@item.Etiqueta</span></div> }
+    </div></section>
+    <section class="panel-card col-12 col-lg-6"><div class="panel-title"><p class="eyebrow">OCUPACIÓN HISTÓRICA</p><h2>Promedio de ocupación por hora</h2></div><div class="hour-list">
+        @foreach (var item in Model.OcupacionPorHora.OrderBy(item => item.Etiqueta)) { <div class="hour-row"><strong>@item.Etiqueta</strong><div class="hour-track"><span style="width:@Math.Max(0, item.Cantidad * 100 / Math.Max(1, Model.OcupacionPorHora.Max(entry => entry.Cantidad)))%"></span></div><span>@item.Cantidad</span></div> }
+        @if (!Model.OcupacionPorHora.Any(item => item.Cantidad > 0)) { <p class="muted">Aún no hay suficientes movimientos para mostrar el detalle por hora.</p> }
+    </div></section>
+</div>

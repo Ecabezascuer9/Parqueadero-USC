@@ -1,0 +1,22 @@
+@model ConfiguracionViewModel
+@{
+    ViewData["Title"] = "Configuración";
+}
+<section class="page-heading"><div><p class="eyebrow">ADMINISTRACIÓN</p><h1>Configuración del aforo</h1><p>Ajusta la capacidad máxima del parqueadero.</p></div></section>
+@if (TempData["Mensaje"] is string mensaje) { <div class="alert alert-success">@mensaje</div> }
+<section class="panel-card config-card">
+    <div class="panel-title"><p class="eyebrow">CAPACIDAD DEL PARQUEADERO</p><h2>Actualizar cupos totales</h2></div>
+    <p class="muted">Actualmente hay <strong>@Model.Ocupados</strong> vehículos dentro y hasta <strong>@Model.ReservasSimultaneas</strong> reservas confirmadas coinciden en su horario de mayor demanda. La capacidad no puede ser inferior a ninguno de esos valores.</p>
+    <form asp-action="Index" method="post" class="inline-form row align-items-end g-3">
+        <div class="col-12 col-md-6"><label asp-for="CupoEstudiantes"></label><input asp-for="CupoEstudiantes" class="form-input form-control" min="1" max="10000" /><span asp-validation-for="CupoEstudiantes" class="validation-message"></span></div>
+        <div class="col-12 col-md-6"><label asp-for="CupoDocentes"></label><input asp-for="CupoDocentes" class="form-input form-control" min="1" max="10000" /><span asp-validation-for="CupoDocentes" class="validation-message"></span></div>
+        <div class="col-12 col-md-6"><label asp-for="CupoEgresados"></label><input asp-for="CupoEgresados" class="form-input form-control" min="1" max="10000" /><span asp-validation-for="CupoEgresados" class="validation-message"></span></div>
+        <div class="col-12 col-md-6"><label asp-for="CupoArenaUSC"></label><input asp-for="CupoArenaUSC" class="form-input form-control" min="1" max="10000" /><span asp-validation-for="CupoArenaUSC" class="validation-message"></span></div>
+        <div class="col-12 col-md-6"><label asp-for="CupoBloque6"></label><input asp-for="CupoBloque6" class="form-input form-control" min="1" max="10000" /></div>
+        <div class="col-12 col-md-6"><label asp-for="CupoAtrasCanchas" class="form-label">Cupos en Canchas</label><input asp-for="CupoAtrasCanchas" class="form-input form-control" min="1" max="10000" /></div>
+        <div class="col-12 col-md-6"><label asp-for="CupoBloque8"></label><input asp-for="CupoBloque8" class="form-input form-control" min="1" max="10000" /></div>
+        <div class="col-12 col-md-6"><label asp-for="CupoPlazoleta"></label><input asp-for="CupoPlazoleta" class="form-input form-control" min="1" max="10000" /></div>
+        <div class="col-12"><label class="check-row"><input asp-for="ArenaUSCAbierta" /> La arena USC está abierta</label></div>
+        <div class="col-12 col-md-4"><button class="button button-primary w-100" type="submit">Guardar capacidades</button></div>
+    </form>
+</section>

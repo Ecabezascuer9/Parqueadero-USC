@@ -1,0 +1,19 @@
+@model LoginViewModel
+@{
+    ViewData["Title"] = "Iniciar sesión";
+}
+<section class="login-layout row g-4 align-items-center">
+    <div class="login-intro col-12 col-lg-6"><div class="eyebrow">PORTAL DE OPERACIÓN</div><h1>Bienvenido<br />al parqueadero.</h1><p>Ingresa con tu cuenta institucional para acceder a las herramientas que corresponden a tu perfil.</p><a asp-controller="Home" asp-action="Index" class="text-link">← Volver al aforo público</a></div>
+    <div class="login-card col-12 col-lg-5"><div class="eyebrow">ACCESO INSTITUCIONAL</div><h2>Iniciar sesión</h2><p class="muted">Usa el correo y la contraseña de tu cuenta.</p>
+        <form asp-action="Login" method="post" class="form-stack">
+            <input asp-for="ReturnUrl" type="hidden" />
+            <div asp-validation-summary="ModelOnly" class="validation-message"></div>
+            <label asp-for="Email"></label><input asp-for="Email" class="form-input" autocomplete="username" placeholder="nombre@usc.edu.co" /><span asp-validation-for="Email" class="validation-message"></span>
+            <label asp-for="Password">Contraseña</label><input asp-for="Password" class="form-input" autocomplete="current-password" placeholder="Contraseña" /><span asp-validation-for="Password" class="validation-message"></span>
+            <label class="check-row"><input asp-for="Recordarme" /> Mantener sesión iniciada</label>
+            <button type="submit" class="button button-primary button-wide">Ingresar a mi cuenta</button>
+        </form>
+        <div class="role-note"><a asp-action="RegistrarEgresado">Crear cuenta de egresado</a></div>
+        <div class="role-note">El menú y las funciones se habilitan según tu perfil asignado.</div>
+    </div>
+</section>

@@ -1,0 +1,28 @@
+@model AccesoViewModel
+@{
+    ViewData["Title"] = "Control de acceso";
+    var aforo = (ResumenAforo)ViewBag.Aforo;
+    var recientes = (IReadOnlyList<RegistroAcceso>)ViewBag.Recientes;
+}
+<section class="page-heading"><div><p class="eyebrow">OPERACIÓN DEL PARQUEADERO</p><h1>@(User.IsInRole("Estudiante") ? "Mis entradas y salidas" : "Control de acceso")</h1><p>@(User.IsInRole("Estudiante") ? "Consulta únicamente tus movimientos registrados con las tarjetas asignadas." : "Registra la entrada o salida al presentar una tarjeta válida.")</p></div><div class="mini-capacity"><span>CUPOS LIBRES</span><strong>@aforo.Disponibles / @aforo.CupoTotal</strong></div></section>
+@if (TempData["Mensaje"] is string mensaje) { <div class="alert alert-success">@mensaje</div> }
+@if (TempData["Error"] is string error) { <div class="alert alert-error">@error</div> }
+<div asp-validation-summary="ModelOnly" class="validation-message"></div>
+@if (!User.IsInRole("Estudiante"))
+{
+    <section class="panel-card access-panel"><div class="panel-title"><span class="eyebrow">MOVIMIENTO VEHICULAR</span><h2>Registrar movimiento</h2></div>
+        <form asp-action="Registrar" method="post" class="access-form row g-3 align-items-end">
+            <div class="form-field col-12 col-md-4"><label asp-for="CodigoTarjeta"></label><input asp-for="CodigoTarjeta" class="form-input form-control" placeholder="Ej. USC-001" autofocus /><span asp-validation-for="CodigoTarjeta" class="validation-message"></span></div>
+            <div class="form-field col-12 col-md-3"><label asp-for="Operacion">Movimiento</label><select asp-for="Operacion" class="form-input form-select"><option value="Entrada">Registrar entrada</option><option value="Salida">Registrar salida</option></select></div>
+            <div class="form-field col-12 col-md-2"><label asp-for="TipoParqueadero"></label><select asp-for="TipoParqueadero" class="form-input form-select"><option value="Bloque6">Bloque 6</option><option value="AtrasCanchas">Atrás de las canchas</option><option value="Bloque8">Bloque 8</option><option value="Plazoleta">Plazoleta</option><option value="ArenaUSC">Arena USC</option></select></div>
+            <div class="col-12 col-md-3"><button type="submit" class="button button-primary w-100">Confirmar movimiento</button></div>
+        </form>
+        <p class="helper-text">Una tarjeta no puede tener dos entradas activas al mismo tiempo. Tarjeta de prueba: <strong>USC-002</strong>.</p>
+    </section>
+}
+<section class="panel-card"><div class="section-heading"><div><p class="eyebrow">ACTIVIDAD RECIENTE</p><h2>Últimos movimientos</h2></div></div>
+    <div class="table-wrap"><table><thead><tr><th>Tarjeta</th><th>Entrada</th><th>Salida</th><th>Duración</th><th>Estado</th></tr></thead><tbody>
+    @foreach (var registro in recientes) { <tr><td><strong>@registro.Tarjeta?.Codigo</strong></td><td>@registro.HoraEntrada.ToString("dd/MM/yyyy HH:mm")</td><td>@(registro.HoraSalida?.ToString("dd/MM/yyyy HH:mm") ?? "—")</td><td>@(registro.DuracionMinutos.HasValue ? $"{registro.DuracionMinutos} min" : "—")</td><td><span class="pill @(registro.HoraSalida is null ? "pill-active" : "pill-muted")">@(registro.HoraSalida is null ? "Dentro" : "Finalizado")</span></td></tr> }
+    @if (recientes.Count == 0) { <tr><td colspan="5" class="table-empty">Aún no hay movimientos registrados.</td></tr> }
+    </tbody></table></div>
+</section>

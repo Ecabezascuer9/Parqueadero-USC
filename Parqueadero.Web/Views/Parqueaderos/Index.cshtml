@@ -1,0 +1,13 @@
+@model ParqueaderoViewModel
+@{
+    ViewData["Title"] = Model.Nombre;
+}
+<section class="page-heading">
+    <div><p class="eyebrow">PARQUEADERO USC</p><h1>@Model.Nombre</h1><p>@(Model.Abierto ? "Ingreso disponible según el cupo asignado." : "Actualmente cerrado.")</p></div>
+</section>
+<section class="panel-card"><p class="muted mb-0">@Model.Descripcion</p></section>
+<section class="stat-grid row g-3">
+    <article class="stat-card col-12 col-md-4"><div class="stat-label">Estado</div><div class="stat-value">@(Model.Abierto ? "Abierto" : "Cerrado")</div></article>
+    <article class="stat-card col-12 col-md-4"><div class="stat-label">Cupos totales</div><div class="stat-value">@Model.CupoTotal</div></article>
+    <article class="stat-card col-12 col-md-4"><div class="stat-label">Disponibles</div><div class="stat-value">@Model.Disponibles</div></article>
+</section>
